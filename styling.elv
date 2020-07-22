@@ -113,13 +113,13 @@ fn extract-style [x &favor-last=$false]{
       s[inverse]=$true
     }
     put $s
-  } elif (==s 'styled-text' (kind-of $x)) {
+  } elif (or (==s 'styled-text' (kind-of $x)) (==s 'ui:text' (kind-of $x))) {
     if $favor-last {
       extract-style $x[-1]
     } else {
       extract-style $x[0]
     }
-  } elif (==s 'styled-segment' (kind-of $x)) {
+  } elif (or (==s 'styled-segment' (kind-of $x)) (==s 'ui:text-segment' (kind-of $x))) {
     s=[&]
     if (!=s "" $x[fg-color]) {
       s[fg-color] = $x[fg-color]
