@@ -37,7 +37,11 @@ fn set-fg [s fg]{
 }
 
 fn get-bg [s]{
-  put $s[bg-color]
+  if (has-key $s bg-color) {
+    put $s[bg-color]
+  } else {
+    put 'default'
+  }
 }
 
 fn set-bg [s bg]{
@@ -57,25 +61,45 @@ fn -build-prompt [segments cfg]{
 
   fn prefix-styled [text style]{
     if (!=s "" $text) {
-      put (styled-segment $text &fg-color=(get-bg $style))
+      if (has-key $style bg-color) {
+        put (styled-segment $text &fg-color=(get-bg $style))
+      } else {
+        put (styled-segment $text)
+      }
     }
   }
   fn suffix-styled [text]{
     if (!=s "" $text) {
-      put (styled-segment $text &fg-color=(get-bg $last-style))
+      if (has-key $last-style bg-color) {
+        put (styled-segment $text &fg-color=(get-bg $last-style))
+      } else {
+        put (styled-segment $text)
+      }
     }
   }
 
   fn separator-trailing-styled [text current-style]{
     if (!=s "" $text) {
-      my-style=[&fg-color=(get-bg $last-style) &bg-color=(get-bg $current-style)]
+      my-style=[&]
+      if (has-key $last-style bg-color) {
+        my-style[fg-color]=(get-bg $last-style)
+      }
+      if (has-key $current-style bg-color) {
+        my-style[bg-color]=(get-bg $current-style)
+      }
       put (styling:apply-style $text $my-style)
     }
   }
 
   fn separator-leading-styled [text current-style]{
     if (!=s "" $text) {
-      my-style=[&fg-color=(get-bg $current-style) &bg-color=(get-bg $last-style)]
+      my-style=[&]
+      if (has-key $last-style bg-color) {
+        my-style[fg-color]=(get-bg $current-style)
+      }
+      if (has-key $current-style bg-color) {
+        my-style[bg-color]=(get-bg $last-style)
+      }
       put (styling:apply-style $text $my-style)
     }
   }
