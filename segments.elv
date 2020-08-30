@@ -1,4 +1,5 @@
 use re
+use str
 use github.com/sblundy/elvish-chain-theme/styling
 
 # Glyphs to be used in the prompt
@@ -31,7 +32,7 @@ fn prompt-pwd {
 	if (> $prompt-pwd-dir-length 0) {
 		dir = (re:replace '(\.?[^/]{'$prompt-pwd-dir-length'})[^/]*/' '$1/' $dir)
 	}
-	splits / $dir | joins ' '$glyph[dirchain]' '
+	str:split / $dir | joins ' '$glyph[dirchain]' '
 }
 
 fn init-segment-arrow {
@@ -49,7 +50,7 @@ fn segment-arrow {
 	if (eq $uid $root-id) {
 		put (styling:apply-style $glyph[arrow-su] $style[arrow-su])
 	} elif (!=s "" $glyph[arrow]) {
-		put (styled $glyph[arrow] (explode $style[arrow]))
+		put (styled $glyph[arrow] (all $style[arrow]))
 		put (styling:apply-style $glyph[arrow] $style[arrow])
 	}
 }
