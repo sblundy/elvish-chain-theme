@@ -1,4 +1,5 @@
 use github.com/sblundy/elvish-chain-theme/styling
+use str
 prompt-segments   = [ ]
 rprompt-segments  = [ ]
 
@@ -25,12 +26,12 @@ rprompt-config = [
 # Style manipulation
 
 fn get-fg [s]{
-    put $s[fg-color]
+  put $s[fg-color]
 }
 
 fn set-fg [s fg]{
-  if (not (has-prefix $fg "color")) {
-    fg="color"$fg
+  if (not (str:has-prefix $fg "color")) {
+    var fg = "color"$fg
   }
   s[fg-color] = $fg
   put $s
@@ -45,8 +46,8 @@ fn get-bg [s]{
 }
 
 fn set-bg [s bg]{
-  if (not (has-prefix $bg "color")) {
-    bg="color"$bg
+  if (not (str:has-prefix $bg "color")) {
+    var bg = "color"$bg
   }
   s[bg-color] = $bg
   put $s
@@ -56,8 +57,8 @@ fn -build-prompt [segments cfg]{
   if (== (count $segments) 0) {
     return
   }
-  first = $true
-  last-style = $cfg[default-style]
+  var first = $true
+  var last-style = $cfg[default-style]
 
   fn prefix-styled [text style]{
     if (!=s "" $text) {
@@ -80,12 +81,12 @@ fn -build-prompt [segments cfg]{
 
   fn separator-trailing-styled [text current-style]{
     if (!=s "" $text) {
-      my-style=[&]
+      var my-style = [&]
       if (has-key $last-style bg-color) {
-        my-style[fg-color]=(get-bg $last-style)
+        set my-style[fg-color] = (get-bg $last-style)
       }
       if (has-key $current-style bg-color) {
-        my-style[bg-color]=(get-bg $current-style)
+        set my-style[bg-color] = (get-bg $current-style)
       }
       put (styling:apply-style $text $my-style)
     }
@@ -93,27 +94,27 @@ fn -build-prompt [segments cfg]{
 
   fn separator-leading-styled [text current-style]{
     if (!=s "" $text) {
-      my-style=[&]
+      var my-style = [&]
       if (has-key $last-style bg-color) {
-        my-style[fg-color]=(get-bg $current-style)
+        set my-style[fg-color] = (get-bg $current-style)
       }
       if (has-key $current-style bg-color) {
-        my-style[bg-color]=(get-bg $last-style)
+        set my-style[bg-color] = (get-bg $last-style)
       }
       put (styling:apply-style $text $my-style)
     }
   }
 
   for seg $segments {
-    out = [($seg)]
+    var out = [($seg)]
     if (> (count $out) 0) {
-      out=$out[0]
-      beginning-style = (styling:extract-style $out[0])
-      ending-style =  (styling:extract-style $out[-1])
+      out = $out[0]
+      var beginning-style = (styling:extract-style $out[0])
+      var ending-style =  (styling:extract-style $out[-1])
 
       if $first {
         put (prefix-styled $cfg[prefix] $beginning-style)
-        first = $false
+        set first = $false
       } else {
         if (has-key $cfg separator-trailing) {
           put (separator-trailing-styled $cfg[separator-trailing]  $beginning-style)
@@ -127,7 +128,7 @@ fn -build-prompt [segments cfg]{
       put $out
       put (styling:apply-style $cfg[segment-suffix] $ending-style)
 
-      last-style = $ending-style
+      set last-style = $ending-style
     }
   }
 
@@ -135,7 +136,7 @@ fn -build-prompt [segments cfg]{
 }
 
 fn -render-prompt [segments @cfgs]{
-  merged_cfg = [&]
+  var merged_cfg = [&]
   for cfg $cfgs {
     for k [(keys $cfg | all)] {
       merged_cfg[$k] = $cfg[$k]

@@ -24,59 +24,59 @@ fn transformer [style]{
     put [s]{ styled-segment ($next $s) &inverse=$true }
   }
 
-  x=[s]{ put $s }
+  var x = [s]{ put $s }
   if (has-key $style fg-color) {
-    x=(apply-fg-color $x)
+    set x = (apply-fg-color $x)
   }
   if (has-key $style bg-color) {
-    x=(apply-bg-color $x)
+    set x = (apply-bg-color $x)
   }
   if (has-key $style bold) {
-    x=(apply-bold $x)
+    set s = (apply-bold $x)
   }
   if (has-key $style dim) {
-    x=(apply-dim $x)
+    set s = (apply-dim $x)
   }
   if (has-key $style italic) {
-    x=(apply-italic $x)
+    set s = (apply-italic $x)
   }
   if (has-key $style underlined) {
-    x=(apply-underlined $x)
+    set s = (apply-underlined $x)
   }
   if (has-key $style blink) {
-    x=(apply-blink $x)
+    set s = (apply-blink $x)
   }
   if (has-key $style inverse) {
-    x=(apply-inverse $x)
+    set s = (apply-inverse $x)
   }
   put $x
 }
 
 fn create-style [fg bg &bold=$false &dim=$false &italic=$false &underlined=$false &blink=$false &inverse=$false]{
-  s=[&]
+  var s = [&]
   if (!=s $fg '') {
-    s[fg-color]=$fg
+    set s[fg-color] = $fg
   }
   if (!=s $bg '') {
-    s[bg-color]=$bg
+    set s[bg-color] = $bg
   }
   if $bold {
-    s[bold]=$true
+    set s[bold] = $true
   }
   if $dim {
-    s[dim]=$true
+    set s[dim] = $true
   }
   if $italic {
-    s[italic]=$true
+    set s[italic] = $true
   }
   if $underlined {
-    s[underlined]=$true
+    set s[underlined] = $true
   }
   if $blink {
-    s[blink]=$true
+    set s[blink] = $true
   }
   if $inverse {
-    s[inverse]=$true
+    set s[inverse] = $true
   }
   put $s
 }
@@ -87,30 +87,30 @@ fn apply-style [x style]{
 
 fn extract-style [x &favor-last=$false]{
   if (==s 'map' (kind-of $x)) {
-    s=[&]
+    var s = [&]
     if (has-key $x fg-color) {
-      s[fg-color] = $x[fg-color]
+      set s[fg-color] = $x[fg-color]
     }
     if (has-key $x bg-color) {
-      s[bg-color] = $x[bg-color]
+      set s[bg-color] = $x[bg-color]
     }
     if (has-key $x bold) {
-      s[bold]=$true
+      set s[bold] = $true
     }
     if (has-key $x dim) {
-      s[dim]=$true
+      set s[dim] = $true
     }
     if (has-key $x italic) {
-      s[italic]=$true
+      set s[italic] = $true
     }
     if (has-key $x underlined) {
-      s[underlined]=$true
+      set s[underlined] = $true
     }
     if (has-key $x blink) {
-      s[blink]=$true
+      set s[blink] = $true
     }
     if (has-key $x inverse) {
-      s[inverse]=$true
+      set s[inverse] = $true
     }
     put $s
   } elif (or (==s 'styled-text' (kind-of $x)) (==s 'ui:text' (kind-of $x))) {
@@ -120,30 +120,30 @@ fn extract-style [x &favor-last=$false]{
       extract-style $x[0]
     }
   } elif (or (==s 'styled-segment' (kind-of $x)) (==s 'ui:text-segment' (kind-of $x))) {
-    s=[&]
+    var s = [&]
     if (!=s "" $x[fg-color]) {
-      s[fg-color] = $x[fg-color]
+      set s[fg-color] = $x[fg-color]
     }
     if (!=s "" $x[bg-color]) {
-      s[bg-color] = $x[bg-color]
+      set s[bg-color] = $x[bg-color]
     }
     if $x[bold] {
-      s[bold]=$true
+      set s[bold] = $true
     }
     if $x[dim] {
-      s[dim]=$true
+      set s[dim] = $true
     }
     if $x[italic] {
-      s[italic]=$true
+      set s[italic] = $true
     }
     if $x[underlined] {
-      s[underlined]=$true
+      set s[underlined] = $true
     }
     if $x[blink] {
-      s[blink]=$true
+      set s[blink] = $true
     }
     if $x[inverse] {
-      s[inverse]=$true
+      set s[inverse] = $true
     }
     put $s
   } else {
