@@ -32,7 +32,7 @@ fn prompt-pwd {
 	if (> $prompt-pwd-dir-length 0) {
 		dir = (re:replace '(\.?[^/]{'$prompt-pwd-dir-length'})[^/]*/' '$1/' $dir)
 	}
-	str:split / $dir | joins ' '$glyph[dirchain]' '
+	str:split / $dir | str:join ' '$glyph[dirchain]' '
 }
 
 fn init-segment-arrow {

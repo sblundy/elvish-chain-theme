@@ -51,7 +51,7 @@ fn segment-behind {
 }
 
 fn segment-staged {
-	total-staged = (+ $-last-status[staged-modified-count staged-deleted-count staged-added-count renamed-count copied-count])
+	total-staged = (+ $-last-status[staged-modified-count] $-last-status[staged-deleted-count] $-last-status[staged-added-count] $-last-status[renamed-count] $-last-status[copied-count])
 	if (> $total-staged 0) {
 		put (styling:apply-style $total-staged$glyph[staged] $style[staged])
 	}
